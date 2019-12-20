@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	tl "github.com/JoelOtter/termloop"
 	"github.com/notnil/chess"
 )
@@ -26,48 +24,53 @@ func main() {
 	// game.Log("chess board:", gc.Position().Board().SquareMap())
 
 	// board
-	makeSquare := func(x, y int, loc string) *Square {
-		return NewSquare(x, y, square.w, square.h, palette.alternate(), loc)
-	}
 	for r := range ranks {
-		for f := range board[r] {
+		for f := range make([]bool, 8) {
+			x := layout.board.marginLeft + (f * layout.square.w)
+			y := layout.board.marginTop + (r * layout.square.h)
 			level.AddEntity(
-				makeSquare((f+1)*square.w, r*square.h, fmt.Sprintf("%s%s", files[f], ranks[r])))
+				NewSquare(x, y, layout.square.w, layout.square.h,
+					palette.alternate(), uci(files[f], ranks[r])))
 		}
 		palette.alternate()
 	}
 
 	// pieces on the board
-	for r := range board {
-		for f, sq := range board[r] {
+	bsquares := board.Squares()
+	for r := range bsquares {
+		for f, sq := range bsquares[r] {
 			piece := gc.Position().Board().Piece(sq.square)
-
-			sq.Text = tl.NewText(((f+1)*square.w)+1, (r*square.h)+1, printPiece(piece),
-				palette.pieces, tl.ColorDefault)
+			x := layout.piece.marginLeft + (f * layout.square.w)
+			y := layout.piece.marginTop + (r * layout.square.h)
+			sq.Text = NewPiece(x, y, piece).Text
 			level.AddEntity(sq)
 		}
-		palette.alternate()
 	}
 
-	// notations
+	// coordinates
 	for r, rank := range ranks {
-		level.AddEntity(
-			tl.NewText(1, (r*square.h + 1), printNotation(rank),
-				palette.notations, tl.ColorDefault))
+		x := layout.ranks.marginLeft
+		y := layout.ranks.marginTop + (r * layout.square.h)
+		level.AddEntity(NewCoordinate(x, y, rank))
 	}
 
 	for f, file := range files {
-		level.AddEntity(
-			tl.NewText((f+1)*square.w, 8*square.h, printNotation(file),
-				palette.notations, tl.ColorDefault))
+		x := layout.files.marginLeft + layout.board.marginLeft + (f * layout.square.w)
+		y := layout.files.marginTop + (layout.board.h * layout.square.h)
+		level.AddEntity(NewCoordinate(x, y, file))
 	}
-	notation = NewNotation((9*square.w)+1, 0, tl.ColorWhite)
+
+	// notations
+	notation = NewNotation(
+		layout.notation.marginLeft+(layout.board.w*layout.square.w),
+		layout.notation.marginTop, tl.ColorWhite)
 	level.AddEntity(notation)
 
 	// user interface
-	prefix := "  your move: "
-	level.AddEntity(tl.NewText(0, (9*square.h)-1, prefix, tl.ColorWhite, tl.ColorDefault))
-	player = NewPlayer(len(prefix), (9*square.h)-1, tl.ColorWhite)
+	player = NewPlayer(
+		layout.input.marginLeft+layout.board.marginLeft,
+		layout.input.marginTop+(layout.board.h*layout.square.h),
+		palette.input)
 	level.AddEntity(player)
 
 	game.Screen().SetLevel(level)

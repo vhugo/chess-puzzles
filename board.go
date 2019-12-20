@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	tl "github.com/JoelOtter/termloop"
 	"github.com/notnil/chess"
 )
@@ -10,6 +8,10 @@ import (
 type BoardSquare struct {
 	*tl.Text
 	square chess.Square
+}
+
+type Board struct {
+	board [8][8]*BoardSquare
 }
 
 var (
@@ -77,61 +79,31 @@ var (
 	H6 = &BoardSquare{square: chess.H6}
 	H7 = &BoardSquare{square: chess.H7}
 	H8 = &BoardSquare{square: chess.H8}
+
+	board = Board{
+		board: [8][8]*BoardSquare{
+			[8]*BoardSquare{A8, B8, C8, D8, E8, F8, G8, H8},
+			[8]*BoardSquare{A7, B7, C7, D7, E7, F7, G7, H7},
+			[8]*BoardSquare{A6, B6, C6, D6, E6, F6, G6, H6},
+			[8]*BoardSquare{A5, B5, C5, D5, E5, F5, G5, H5},
+			[8]*BoardSquare{A4, B4, C4, D4, E4, F4, G4, H4},
+			[8]*BoardSquare{A3, B3, C3, D3, E3, F3, G3, H3},
+			[8]*BoardSquare{A2, B2, C2, D2, E2, F2, G2, H2},
+			[8]*BoardSquare{A1, B1, C1, D1, E1, F1, G1, H1},
+		}}
 )
 
-var files = [8]chess.File{
-	chess.FileA, chess.FileB, chess.FileC, chess.FileD,
-	chess.FileE, chess.FileF, chess.FileG, chess.FileH,
+func (b Board) Squares() [8][8]*BoardSquare {
+	return b.board
 }
 
-var ranks = [8]chess.Rank{
-	chess.Rank8, chess.Rank7, chess.Rank6, chess.Rank5,
-	chess.Rank4, chess.Rank3, chess.Rank2, chess.Rank1,
-}
-
-var board = [8][8]*BoardSquare{
-	[8]*BoardSquare{A8, B8, C8, D8, E8, F8, G8, H8},
-	[8]*BoardSquare{A7, B7, C7, D7, E7, F7, G7, H7},
-	[8]*BoardSquare{A6, B6, C6, D6, E6, F6, G6, H6},
-	[8]*BoardSquare{A5, B5, C5, D5, E5, F5, G5, H5},
-	[8]*BoardSquare{A4, B4, C4, D4, E4, F4, G4, H4},
-	[8]*BoardSquare{A3, B3, C3, D3, E3, F3, G3, H3},
-	[8]*BoardSquare{A2, B2, C2, D2, E2, F2, G2, H2},
-	[8]*BoardSquare{A1, B1, C1, D1, E1, F1, G1, H1},
-}
-
-func printPiece(r chess.Piece) string {
-	var p string
-	switch r.Type() {
-	case chess.King:
-		p = "K"
-	case chess.Queen:
-		p = "Q"
-	case chess.Rook:
-		p = "R"
-	case chess.Bishop:
-		p = "B"
-	case chess.Knight:
-		p = "N"
-	case chess.Pawn:
-		p = "P"
-	}
-
-	if len(p) == 0 {
-		return ""
-	}
-
-	if r.Color() == chess.Black {
-		return fmt.Sprintf(" *%s", p)
-	}
-	return fmt.Sprintf("  %s", p)
-}
-
-func updateBoard() {
-	for r := range board {
-		for _, sq := range board[r] {
-			piece := gc.Position().Board().Piece(sq.square)
-			sq.SetText(printPiece(piece))
+func (b Board) Update() {
+	for r := range b.board {
+		for _, sq := range b.board[r] {
+			piece := Piece{
+				piece: gc.Position().Board().Piece(sq.square),
+			}
+			sq.SetText(piece.String())
 		}
 	}
 }

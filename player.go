@@ -13,6 +13,7 @@ const (
 type Player struct {
 	*tl.Text
 	buffer string
+	prefix string
 }
 
 var player *Player
@@ -41,7 +42,7 @@ func (p *Player) Tick(e tl.Event) {
 				case cmdNew:
 					gc = chess.NewGame()
 					notation.Update()
-					updateBoard()
+					board.Update()
 				}
 				// game.Log("command caller", p.buffer)
 
@@ -58,13 +59,14 @@ func (p *Player) Tick(e tl.Event) {
 			p.buffer = p.buffer + string(e.Ch)
 		}
 
-		p.SetText(p.buffer)
+		p.SetText(p.prefix + p.buffer)
 	}
 }
 
 func NewPlayer(x, y int, color tl.Attr) *Player {
 	p := new(Player)
-	p.Text = tl.NewText(x, y, "", color, tl.ColorDefault)
+	p.prefix = "your move: "
+	p.Text = tl.NewText(x, y, p.prefix, color, tl.ColorDefault)
 	return p
 }
 
@@ -75,7 +77,7 @@ func move(m string) error {
 	}
 	gc.Move(move)
 	notation.Update()
-	updateBoard()
+	board.Update()
 	// game.Log("chess board: ", gc.Position().Board().Draw())
 
 	return nil
