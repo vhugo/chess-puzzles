@@ -22,13 +22,35 @@ A binary version is still on the making so until then you will need
 After installing Golang following the sequence of commands:
 
 ```bash
-go get github.com/vhugo/chess-puzzles.git
-cd $GOPATH/src/github.com/vhugo/chess-puzzles
-go run .
+go get -u github.com/vhugo/chess-puzzles.git
+go install github.com/vhugo/chess-puzzles.git
+chess-puzzles
 ```
+
+## Commands and key bindings
+
+**commands** are keywords you can type that are liked to an action: 
+
+| commands | description                    |
+|----------|--------------------------------|
+| !new     | get a new puzzle, if available |
+| e2e3     | move a piece from square `e2` to `e3` if the move is legal. Use [long algebraic notation](https://en.wikipedia.org/wiki/Algebraic_notation_(chess)#Long_algebraic_notation) to move your pieces. |
+
+**key bindings** are keystrokes (shortcuts) linked to an action: 
+
+| keys   | description          |
+|--------|----------------------|
+| Ctrl+C | exits the game       |
+| Ctrl+U | clean the input area |
+| Enter  | submit your command  |
 
 ## To-do
 
-- [ ] Load puzzles from chess.com API
+- [X] Load puzzles from chess.com API
+- [X] Add status to show success or failure
+- [X] Add command to get new puzzle 
+- [ ] Add command to reveal next move (this should mark the puzzle as failed) 
+- [ ] Add a clock that resets when a new puzzle starts
+- [ ] Add help command to display list of commands
 - [ ] Load puzzles locally from JSON files
 - [ ] Setup release of binaries in this repo

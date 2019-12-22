@@ -3,16 +3,20 @@ package main
 import (
 	tl "github.com/JoelOtter/termloop"
 	"github.com/notnil/chess"
+	"github.com/vhugo/chess-puzzles/puzzle"
 )
 
 var gc *chess.Game
 var game *tl.Game
+var puzzler puzzle.Puzzler
 
 func main() {
-	gc = chess.NewGame()
+	pz, err := loadPuzzle()
+	if err != nil {
+		panic(err)
+	}
+	gc = chess.NewGame(pz)
 	game = tl.NewGame()
-
-	// game.SetDebugOn(true)
 	game.Screen().SetFps(30)
 
 	level := tl.NewBaseLevel(tl.Cell{
@@ -20,8 +24,6 @@ func main() {
 		Fg: tl.ColorWhite,
 		Ch: ' ',
 	})
-
-	// game.Log("chess board:", gc.Position().Board().SquareMap())
 
 	// board
 	for r := range ranks {
@@ -72,6 +74,16 @@ func main() {
 		layout.input.marginTop+(layout.board.h*layout.square.h),
 		palette.input)
 	level.AddEntity(player)
+
+	status = NewStatus(
+		layout.input.marginLeft+layout.board.marginLeft,
+		layout.input.marginTop+(layout.board.h*layout.square.h)+1)
+	level.AddEntity(status)
+
+	score = NewScore(
+		layout.input.marginLeft+layout.board.marginLeft+(layout.board.w*layout.square.w),
+		layout.input.marginTop+(layout.board.h*layout.square.h)+1)
+	level.AddEntity(score)
 
 	game.Screen().SetLevel(level)
 	game.Start()

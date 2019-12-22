@@ -3,6 +3,7 @@ package main
 import (
 	tl "github.com/JoelOtter/termloop"
 	"github.com/notnil/chess"
+	"github.com/vhugo/chess-puzzles/puzzle"
 	"strings"
 )
 
@@ -23,6 +24,7 @@ func (p *Player) Input() string {
 }
 
 func (p *Player) Tick(e tl.Event) {
+
 	if e.Type == tl.EventKey {
 		switch e.Key {
 		case tl.KeyBackspace2, tl.KeyBackspace:
@@ -30,6 +32,9 @@ func (p *Player) Tick(e tl.Event) {
 				return
 			}
 			p.buffer = p.buffer[:len(p.buffer)-1]
+
+		case tl.KeyCtrlU:
+			p.buffer = ""
 
 		case tl.KeyEnter:
 			if len(p.buffer) == 0 {
@@ -40,17 +45,35 @@ func (p *Player) Tick(e tl.Event) {
 			case '!':
 				switch strings.ToLower(p.buffer) {
 				case cmdNew:
-					gc = chess.NewGame()
+					pz, err := loadPuzzle()
+					if err != nil {
+						panic(err)
+					}
+					gc = chess.NewGame(pz)
 					notation.Update()
 					board.Update()
+
+					status.Update("", tl.ColorDefault)
+					score.Update("unsolved", tl.ColorDefault)
 				}
-				// game.Log("command caller", p.buffer)
 
 			default:
 				move(p.buffer)
-				// if err := move(p.buffer); err != nil {
-				// 	game.Log("move error: ", err)
-				// }
+
+				if puzzler != nil {
+					switch {
+					case puzzler.Status() == puzzle.SUCCESS:
+						status.Update("succeed", tl.RgbTo256Color(0, 100, 0))
+
+					case puzzler.Status() == puzzle.FAILURE:
+						status.Update("failed", tl.RgbTo256Color(100, 0, 0))
+					}
+
+					if puzzler.Done() {
+						score.Update("solved", tl.RgbTo256Color(120, 100, 0))
+					}
+
+				}
 			}
 
 			p.buffer = ""
@@ -76,10 +99,30 @@ func move(m string) error {
 	if err != nil {
 		return err
 	}
+	if puzzler != nil && !puzzler.Answer(move) {
+		return nil
+	}
+
 	gc.Move(move)
 	notation.Update()
 	board.Update()
-	// game.Log("chess board: ", gc.Position().Board().Draw())
+
+	if puzzler != nil && puzzler.Status() != puzzle.SUCCESS {
+		gc.Move(puzzler.NextMove())
+		notation.Update()
+		board.Update()
+	}
 
 	return nil
+}
+
+func loadPuzzle() (func(*chess.Game), error) {
+	var err error
+
+	puzzler, err = puzzle.New(puzzle.CHESSDOTCOM)
+	if err != nil {
+		return nil, err
+	}
+
+	return puzzler.NewGame()
 }
