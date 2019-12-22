@@ -103,6 +103,7 @@ func (b Board) Update() {
 			piece := Piece{
 				piece: gc.Position().Board().Piece(sq.square),
 			}
+			sq.Text.SetColor(piece.Color(), tl.ColorDefault)
 			sq.SetText(piece.String())
 		}
 	}

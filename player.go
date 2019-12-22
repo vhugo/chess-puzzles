@@ -59,14 +59,15 @@ func (p *Player) Tick(e tl.Event) {
 			p.buffer = p.buffer + string(e.Ch)
 		}
 
-		p.SetText(p.prefix + p.buffer)
+		p.SetText(gc.Position().Turn().Name() + p.prefix + p.buffer)
 	}
 }
 
 func NewPlayer(x, y int, color tl.Attr) *Player {
 	p := new(Player)
-	p.prefix = "your move: "
-	p.Text = tl.NewText(x, y, p.prefix, color, tl.ColorDefault)
+	p.prefix = " to move: "
+	p.Text = tl.NewText(x, y,
+		gc.Position().Turn().Name()+p.prefix, color, tl.ColorDefault)
 	return p
 }
 

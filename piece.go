@@ -26,8 +26,15 @@ func (p Piece) String() string {
 	}
 }
 
+func (p Piece) Color() tl.Attr {
+	if p.piece.Color() == chess.Black {
+		return palette.black
+	}
+	return palette.white
+}
+
 func NewPiece(x, y int, p chess.Piece) *Piece {
 	piece := &Piece{piece: p}
-	piece.Text = tl.NewText(x+2, y, piece.String(), palette.pieces, tl.ColorDefault)
+	piece.Text = tl.NewText(x+2, y, piece.String(), piece.Color(), tl.ColorDefault)
 	return piece
 }
