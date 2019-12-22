@@ -14,3 +14,21 @@ Needless to say, this is a work in progress, the game starts and you can enter
 notation](https://en.wikipedia.org/wiki/Algebraic_notation_(chess)#Long_algebraic_notation)
 (e.g. e2e4) which makes the pieces to move on the board, however, puzzles are
 not being loaded yet. It is next on my list.
+
+## Getting started
+
+A binary version is still on the making so until then you will need
+[Golang](https://golang.org/doc/install) to compile and run the source yourself.
+After installing Golang following the sequence of commands:
+
+```bash
+go get github.com/vhugo/chess-puzzles.git
+cd $GOPATH/src/github.com/vhugo/chess-puzzles
+go run .
+```
+
+## To-do
+
+- [ ] Load puzzles from chess.com API
+- [ ] Load puzzles locally from JSON files
+- [ ] Setup release of binaries in this repo
