@@ -16,6 +16,7 @@ func main() {
 		panic(err)
 	}
 	gc = chess.NewGame(pz)
+
 	game = tl.NewGame()
 	game.Screen().SetFps(30)
 

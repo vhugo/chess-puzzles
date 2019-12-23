@@ -19,6 +19,8 @@ type Layout struct {
 	ranks    block
 	files    block
 	notation block
+	status   block
+	score    block
 	input    block
 }
 
@@ -51,6 +53,9 @@ var (
 		},
 		notation: block{
 			marginLeft: 3,
+		},
+		status: block{
+			marginLeft: 2,
 		},
 		input: block{
 			marginTop: 2,

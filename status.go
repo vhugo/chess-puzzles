@@ -15,9 +15,6 @@ var status *Status
 func (s *Status) Update(text string, color tl.Attr) {
 	s.SetText(" " + text + " ")
 	s.SetColor(palette.input, color)
-	x, y := s.Position()
-	x += len(unsolved) - len(text)
-	s.SetPosition(x, y)
 }
 
 func NewStatus(x, y int) *Status {
