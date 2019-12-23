@@ -47,7 +47,7 @@ chess-puzzles
 ## To-do
 
 - [X] Load puzzles from chess.com API
-- [X] Add status to show success or failure
+- [X] Add score to show success or failure
 - [X] Add command to get new puzzle 
 - [ ] Add command to reveal next move (this should mark the puzzle as failed) 
 - [ ] Add a clock that resets when a new puzzle starts

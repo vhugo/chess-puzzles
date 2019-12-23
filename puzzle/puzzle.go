@@ -11,11 +11,11 @@ type Puzzler interface {
 	NewGame() (func(*chess.Game), error)
 	Answer(*chess.Move) bool
 	NextMove() *chess.Move
-	Status() Status
+	Score() Score
 	Done() bool
 }
 
-type Status int8
+type Score int8
 
 // Source represents the origin of requested puzzles.
 type Source int
@@ -23,8 +23,10 @@ type Source int
 const (
 	_           Source = iota
 	CHESSDOTCOM        // chess.com
+)
 
-	NOSTATUS Status = iota
+const (
+	NOSCORE Score = iota
 	SUCCESS
 	FAILURE
 )

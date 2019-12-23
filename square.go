@@ -17,6 +17,11 @@ func (s *Square) Tick(e tl.Event) {
 	}
 
 	if player.Input()[:2] == s.loc || player.Input()[2:] == s.loc {
+		// once puzzle is done no more moves are allowed.
+		if puzzler != nil && puzzler.Done() {
+			s.SetColor(palette.invalid)
+			return
+		}
 
 		for _, m := range gc.ValidMoves() {
 			if (m.String() == player.Input() && len(player.Input()) == 4) ||

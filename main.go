@@ -75,15 +75,15 @@ func main() {
 		palette.input)
 	level.AddEntity(player)
 
-	status = NewStatus(
+	score = NewScore(
 		layout.input.marginLeft+layout.board.marginLeft,
 		layout.input.marginTop+(layout.board.h*layout.square.h)+1)
-	level.AddEntity(status)
+	level.AddEntity(score)
 
-	score = NewScore(
+	status = NewStatus(
 		layout.input.marginLeft+layout.board.marginLeft+(layout.board.w*layout.square.w),
 		layout.input.marginTop+(layout.board.h*layout.square.h)+1)
-	level.AddEntity(score)
+	level.AddEntity(status)
 
 	game.Screen().SetLevel(level)
 	game.Start()

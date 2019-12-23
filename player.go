@@ -53,8 +53,8 @@ func (p *Player) Tick(e tl.Event) {
 					notation.Update()
 					board.Update()
 
-					status.Update("", tl.ColorDefault)
-					score.Update("unsolved", tl.ColorDefault)
+					score.Update("", tl.ColorDefault)
+					status.Update("unsolved", tl.ColorDefault)
 				}
 
 			default:
@@ -62,15 +62,15 @@ func (p *Player) Tick(e tl.Event) {
 
 				if puzzler != nil {
 					switch {
-					case puzzler.Status() == puzzle.SUCCESS:
-						status.Update("succeed", tl.RgbTo256Color(0, 100, 0))
+					case puzzler.Score() == puzzle.SUCCESS:
+						score.Update("succeed", tl.RgbTo256Color(0, 100, 0))
 
-					case puzzler.Status() == puzzle.FAILURE:
-						status.Update("failed", tl.RgbTo256Color(100, 0, 0))
+					case puzzler.Score() == puzzle.FAILURE:
+						score.Update("failed", tl.RgbTo256Color(100, 0, 0))
 					}
 
 					if puzzler.Done() {
-						score.Update("solved", tl.RgbTo256Color(120, 100, 0))
+						status.Update("solved", tl.RgbTo256Color(120, 100, 0))
 					}
 
 				}
@@ -107,7 +107,7 @@ func move(m string) error {
 	notation.Update()
 	board.Update()
 
-	if puzzler != nil && puzzler.Status() != puzzle.SUCCESS {
+	if puzzler != nil && puzzler.Score() != puzzle.SUCCESS {
 		gc.Move(puzzler.NextMove())
 		notation.Update()
 		board.Update()

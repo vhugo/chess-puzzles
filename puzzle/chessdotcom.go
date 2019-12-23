@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"strings"
 	"time"
+	"unicode"
 
 	"github.com/notnil/chess"
 )
@@ -21,7 +22,7 @@ type ChessDotCom struct {
 	expires   time.Duration
 	expiresAt time.Time
 	puzzle    ChessDotComPuzzle
-	status    Status
+	score     Score
 	done      bool
 	answers   []*chess.Move
 	game      *chess.Game
@@ -61,37 +62,15 @@ func NewChessDotCom(baseURL string, timeout time.Duration, expires time.Duration
 // This endpoint for random puzzle from chess.com has new information
 // every 15 seconds, so there is no point in sending request before that.
 func (c *ChessDotCom) NewGame() (func(*chess.Game), error) {
-	if c.expiresAt.Before(time.Now()) {
+	if c.hasExpired() {
 		if err := c.get("puzzle/random", nil, &c.puzzle); err != nil {
 			return nil, err
 		}
 
-		pgn := strings.ReplaceAll(c.puzzle.PGN, ".", " ")
-		n := strings.Split(pgn, "]")
-		if len(n) == 0 {
-			return nil, fmt.Errorf("puzzle is missing a correct answer")
-		}
-
-		fen, err := chess.FEN(c.puzzle.FEN)
+		var err error
+		c.answers, err = c.gatherAnswers()
 		if err != nil {
-			println(c.puzzle.FEN)
 			return nil, err
-		}
-
-		game := chess.NewGame(fen)
-		for _, m := range strings.Fields(n[len(n)-1]) {
-			if len(m) < 3 {
-				continue
-			}
-			move, err := chess.AlgebraicNotation{}.Decode(game.Position(), m)
-			if err != nil {
-				println(c.puzzle.PGN)
-				println(m)
-				return nil, err
-			}
-
-			c.answers = append(c.answers, move)
-			game.Move(move)
 		}
 	}
 	return chess.FEN(c.puzzle.FEN)
@@ -103,7 +82,7 @@ func (c *ChessDotCom) Answer(m *chess.Move) bool {
 		c.answers = c.answers[1:]
 		return true
 	}
-	c.status = FAILURE
+	c.score = FAILURE
 	return false
 }
 
@@ -117,14 +96,14 @@ func (c *ChessDotCom) NextMove() *chess.Move {
 	return next
 }
 
-func (c *ChessDotCom) Status() Status {
-	if c.status == NOSTATUS {
+func (c *ChessDotCom) Score() Score {
+	if c.score == NOSCORE {
 		if len(c.answers) == 0 {
-			c.status = SUCCESS
+			c.score = SUCCESS
 			return SUCCESS
 		}
 	}
-	return c.status
+	return c.score
 }
 
 func (c *ChessDotCom) Done() bool {
@@ -173,4 +152,39 @@ func (c *ChessDotCom) doRequest(method, endpoint string, body io.Reader) (*http.
 
 	client := &http.Client{Timeout: c.timeout}
 	return client.Do(r)
+}
+
+func (c *ChessDotCom) hasExpired() bool {
+	return c.expiresAt.Before(time.Now())
+}
+
+func (c *ChessDotCom) gatherAnswers() ([]*chess.Move, error) {
+	var answers []*chess.Move
+
+	pgn := strings.ReplaceAll(c.puzzle.PGN, ".", " ")
+	n := strings.Split(pgn, "]")
+	if len(n) == 0 {
+		return nil, fmt.Errorf("puzzle is missing a correct answer format")
+	}
+
+	fen, err := chess.FEN(c.puzzle.FEN)
+	if err != nil {
+		return nil, err
+	}
+
+	game := chess.NewGame(fen)
+	for _, m := range strings.Fields(n[len(n)-1]) {
+		if len(m) == 0 || !unicode.IsLetter(rune(m[0])) {
+			continue
+		}
+		move, err := chess.AlgebraicNotation{}.Decode(game.Position(), m)
+		if err != nil {
+			return nil, err
+		}
+
+		answers = append(answers, move)
+		game.Move(move)
+	}
+
+	return answers, nil
 }
