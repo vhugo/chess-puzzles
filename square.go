@@ -16,7 +16,8 @@ func (s *Square) Tick(e tl.Event) {
 		return
 	}
 
-	if player.Input()[:2] == s.loc || player.Input()[2:] == s.loc {
+	input := player.Input()
+	if input[:2] == s.loc || (len(input) >= 4 && input[2:4] == s.loc) {
 		// once puzzle is done no more moves are allowed.
 		if puzzler != nil && puzzler.Done() {
 			s.SetColor(palette.invalid)
@@ -24,10 +25,7 @@ func (s *Square) Tick(e tl.Event) {
 		}
 
 		for _, m := range gc.ValidMoves() {
-			if (m.String() == player.Input() && len(player.Input()) == 4) ||
-				(player.Input()[:2] == m.String()[:2] && player.Input()[:2] == s.loc) ||
-				(player.Input()[2:] == m.String()[2:] && player.Input()[2:] == s.loc) {
-
+			if matchMove(m.String(), player.Input(), s.loc) {
 				s.SetColor(palette.valid)
 				return
 			}
@@ -37,6 +35,11 @@ func (s *Square) Tick(e tl.Event) {
 	}
 
 	s.SetColor(s.color)
+}
+
+func matchMove(valid, input, loc string) bool {
+	return (len(input) >= 4 && input[:4] == valid[:4] && input[2:4] == loc) ||
+		(len(input) >= 2 && input[:2] == valid[:2] && input[:2] == loc)
 }
 
 func NewSquare(x, y, w, h int, color tl.Attr, loc string) *Square {
