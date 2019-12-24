@@ -6,6 +6,11 @@ type Score struct {
 	*tl.Text
 }
 
+const (
+	succeed = "succeed"
+	failed  = "failed"
+)
+
 var score *Score
 
 func (s *Score) Update(text string, color tl.Attr) {
@@ -15,7 +20,6 @@ func (s *Score) Update(text string, color tl.Attr) {
 
 func NewScore(x, y int) *Score {
 	s := new(Score)
-	s.Text = tl.NewText(x, y, " ",
-		palette.input, tl.ColorDefault)
+	s.Text = tl.NewText(x, y, "", palette.input, tl.ColorDefault)
 	return s
 }

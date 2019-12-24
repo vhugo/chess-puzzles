@@ -82,7 +82,7 @@ func main() {
 	level.AddEntity(score)
 
 	status = NewStatus(
-		layout.input.marginLeft+layout.board.marginLeft+(layout.board.w*layout.square.w),
+		layout.board.marginLeft+(layout.board.w*layout.square.w),
 		layout.input.marginTop+(layout.board.h*layout.square.h)+1)
 	level.AddEntity(status)
 

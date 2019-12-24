@@ -54,7 +54,7 @@ func (p *Player) Tick(e tl.Event) {
 					board.Update()
 
 					score.Update("", tl.ColorDefault)
-					status.Update("unsolved", tl.ColorDefault)
+					status.Update(unsolved, tl.ColorDefault)
 				}
 
 			default:
@@ -63,16 +63,15 @@ func (p *Player) Tick(e tl.Event) {
 				if puzzler != nil {
 					switch {
 					case puzzler.Score() == puzzle.SUCCESS:
-						score.Update("succeed", tl.RgbTo256Color(0, 100, 0))
+						score.Update(succeed, tl.RgbTo256Color(0, 100, 0))
 
 					case puzzler.Score() == puzzle.FAILURE:
-						score.Update("failed", tl.RgbTo256Color(100, 0, 0))
+						score.Update(failed, tl.RgbTo256Color(100, 0, 0))
 					}
 
 					if puzzler.Done() {
-						status.Update("solved", tl.RgbTo256Color(120, 100, 0))
+						status.Update(solved, tl.RgbTo256Color(120, 100, 0))
 					}
-
 				}
 			}
 
