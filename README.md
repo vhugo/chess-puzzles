@@ -24,7 +24,7 @@ After installing Golang following the sequence of commands:
 ```bash
 go get -u github.com/vhugo/chess-puzzles.git
 go install github.com/vhugo/chess-puzzles.git
-chess-puzzles
+$GOPATH/bin/chess-puzzles
 ```
 
 ## Commands and key bindings
@@ -39,7 +39,7 @@ commands are keywords you can type that are liked to an action:
 | e2e3     | move a piece from square `e2` to `e3` if the move is legal                                 |
 | e7e8q    | move a piece from square `e7` to `e8` and promote `pawn` to `queen` if the move is allowed |
 
-***Use [long algebraic notation](https://en.wikipedia.org/wiki/Algebraic_notation_(chess)#Long_algebraic_notation) to move your pieces.***
+***To move you pieces on the board use [long algebraic notation](https://en.wikipedia.org/wiki/Algebraic_notation_(chess)#Long_algebraic_notation) in [Universal Chess Interface (UCI)](https://en.wikipedia.org/wiki/Universal_Chess_Interface) format.***
 
 ### key bindings
 
