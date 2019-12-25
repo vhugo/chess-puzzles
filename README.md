@@ -15,6 +15,10 @@ notation](https://en.wikipedia.org/wiki/Algebraic_notation_(chess)#Long_algebrai
 (e.g. e2e4) which makes the pieces to move on the board, however, puzzles are
 not being loaded yet. It is next on my list.
 
+This is what it looks like:
+
+![alt puzzle solved][chess_puzzle]
+
 ## Getting started
 
 A binary version is still on the making so until then you will need
@@ -62,3 +66,10 @@ key bindings are keystrokes (shortcuts) linked to an action:
 - [ ] Add help command to display list of commands
 - [ ] Load puzzles locally from JSON files
 - [ ] Setup release of binaries in this repo
+
+
+## License
+
+Licensed under the MIT License. 
+
+[chess_puzzle]: https://i.imgur.com/ByQRCmb.gif
