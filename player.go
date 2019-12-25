@@ -8,7 +8,8 @@ import (
 )
 
 const (
-	cmdNew = "!new"
+	cmdNew  = "!new"
+	cmdHint = "!hint"
 )
 
 type Player struct {
@@ -50,14 +51,25 @@ func (p *Player) Tick(e tl.Event) {
 					notation.Update()
 					board.Update()
 
+					p.previousMove = ""
+					p.move = ""
 					score.Update("", tl.ColorDefault)
 					status.Update(unsolved, tl.ColorDefault)
+
+				case cmdHint:
+					nextMove := puzzler.Hint()
+					if nextMove == nil {
+						return
+					}
+					puzzler.Answer(nil) // fails the puzzle
+					p.previousMove = nextMove.String()
+					score.Update(failed, tl.RgbTo256Color(100, 0, 0))
 				}
 
 			default:
+				p.previousMove = p.move
 				move(p.move)
 
-				p.previousMove = p.move
 				if puzzler != nil {
 					switch {
 					case puzzler.Score() == puzzle.SUCCESS:
@@ -65,7 +77,6 @@ func (p *Player) Tick(e tl.Event) {
 
 					case puzzler.Score() == puzzle.FAILURE:
 						score.Update(failed, tl.RgbTo256Color(100, 0, 0))
-						p.previousMove = ""
 					}
 
 					if puzzler.Done() {
@@ -97,6 +108,7 @@ func move(m string) error {
 		return err
 	}
 	if puzzler != nil && !puzzler.Answer(move) {
+		player.previousMove = ""
 		return nil
 	}
 
@@ -105,7 +117,13 @@ func move(m string) error {
 	board.Update()
 
 	if puzzler != nil && puzzler.Score() != puzzle.SUCCESS {
-		gc.Move(puzzler.NextMove())
+		nextMove := puzzler.NextMove()
+		if nextMove == nil {
+			return nil
+		}
+
+		gc.Move(nextMove)
+		player.previousMove = nextMove.String()
 		notation.Update()
 		board.Update()
 	}

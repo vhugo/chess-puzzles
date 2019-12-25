@@ -78,7 +78,7 @@ func (c *ChessDotCom) NewGame() (func(*chess.Game), error) {
 
 // Answer returns whether or not a move is correct
 func (c *ChessDotCom) Answer(m *chess.Move) bool {
-	if len(c.answers) > 0 && m.String() == c.answers[0].String() {
+	if m != nil && len(c.answers) > 0 && m.String() == c.answers[0].String() {
 		c.answers = c.answers[1:]
 		return true
 	}
@@ -94,6 +94,14 @@ func (c *ChessDotCom) NextMove() *chess.Move {
 	next := c.answers[0]
 	c.answers = c.answers[1:]
 	return next
+}
+
+// Hint returns the next move in the answer
+func (c *ChessDotCom) Hint() *chess.Move {
+	if len(c.answers) == 0 {
+		return nil
+	}
+	return c.answers[0]
 }
 
 func (c *ChessDotCom) Score() Score {

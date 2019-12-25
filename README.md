@@ -36,6 +36,7 @@ commands are keywords you can type that are liked to an action:
 | commands | description                                                                                |
 |----------|--------------------------------------------------------------------------------------------|
 | !new     | get a new puzzle, if available                                                             |
+| !hint    | highlight the next move of the puzzle, but marks it as failed.                             |
 | e2e3     | move a piece from square `e2` to `e3` if the move is legal                                 |
 | e7e8q    | move a piece from square `e7` to `e8` and promote `pawn` to `queen` if the move is allowed |
 
@@ -56,7 +57,7 @@ key bindings are keystrokes (shortcuts) linked to an action:
 - [X] Load puzzles from chess.com API
 - [X] Add score to show success or failure
 - [X] Add command to get new puzzle 
-- [ ] Add command to reveal next move (this should mark the puzzle as failed) 
+- [X] Add command to reveal next move (this should mark the puzzle as failed) 
 - [ ] Add a clock that resets when a new puzzle starts
 - [ ] Add help command to display list of commands
 - [ ] Load puzzles locally from JSON files

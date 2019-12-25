@@ -11,6 +11,7 @@ type Puzzler interface {
 	NewGame() (func(*chess.Game), error)
 	Answer(*chess.Move) bool
 	NextMove() *chess.Move
+	Hint() *chess.Move
 	Score() Score
 	Done() bool
 }
