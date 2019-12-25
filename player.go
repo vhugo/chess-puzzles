@@ -13,37 +13,34 @@ const (
 
 type Player struct {
 	*tl.Text
-	buffer string
-	prefix string
+	previousMove string
+	move         string
+	prefix       string
 }
 
 var player *Player
-
-func (p *Player) Input() string {
-	return p.buffer
-}
 
 func (p *Player) Tick(e tl.Event) {
 
 	if e.Type == tl.EventKey {
 		switch e.Key {
 		case tl.KeyBackspace2, tl.KeyBackspace:
-			if len(p.buffer) == 0 {
+			if len(p.move) == 0 {
 				return
 			}
-			p.buffer = p.buffer[:len(p.buffer)-1]
+			p.move = p.move[:len(p.move)-1]
 
 		case tl.KeyCtrlU:
-			p.buffer = ""
+			p.move = ""
 
 		case tl.KeyEnter:
-			if len(p.buffer) == 0 {
+			if len(p.move) == 0 {
 				return
 			}
 
-			switch p.buffer[0] {
+			switch p.move[0] {
 			case '!':
-				switch strings.ToLower(p.buffer) {
+				switch strings.ToLower(p.move) {
 				case cmdNew:
 					pz, err := loadPuzzle()
 					if err != nil {
@@ -58,8 +55,9 @@ func (p *Player) Tick(e tl.Event) {
 				}
 
 			default:
-				move(p.buffer)
+				move(p.move)
 
+				p.previousMove = p.move
 				if puzzler != nil {
 					switch {
 					case puzzler.Score() == puzzle.SUCCESS:
@@ -67,6 +65,7 @@ func (p *Player) Tick(e tl.Event) {
 
 					case puzzler.Score() == puzzle.FAILURE:
 						score.Update(failed, tl.RgbTo256Color(100, 0, 0))
+						p.previousMove = ""
 					}
 
 					if puzzler.Done() {
@@ -74,14 +73,13 @@ func (p *Player) Tick(e tl.Event) {
 					}
 				}
 			}
-
-			p.buffer = ""
+			p.move = ""
 
 		default:
-			p.buffer = p.buffer + string(e.Ch)
+			p.move = p.move + string(e.Ch)
 		}
 
-		p.SetText(gc.Position().Turn().Name() + p.prefix + p.buffer)
+		p.SetText(gc.Position().Turn().Name() + p.prefix + p.move)
 	}
 }
 
