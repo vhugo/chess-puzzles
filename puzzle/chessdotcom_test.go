@@ -169,33 +169,25 @@ func TestChessDotComPuzzle(t *testing.T) {
 		t.Run(tc.m, func(t *testing.T) {
 			var err error
 			puzzler, err := puzzle.NewChessDotCom(tc.url, time.Minute, time.Millisecond)
-			if err != nil {
-				t.Fatal("unexpected error: ", err)
-			}
+			isOK(t, err)
 
 			var gc *chess.Game
 			var newPuzzle func(*chess.Game)
 
 			newPuzzle, err = puzzler.NewGame()
-			if err != nil {
-				t.Fatal("unexpected error: ", err)
-			}
+			isOK(t, err)
 
 			gc = chess.NewGame(newPuzzle)
 			for _, m := range tc.moves {
 				move, err := chess.AlgebraicNotation{}.Decode(gc.Position(), m)
-				if err != nil {
-					t.Fatal("unexpected error: ", err)
-				}
+				isOK(t, err)
 
 				IsAnswer := puzzler.Answer(move)
 				if IsAnswer != tc.expected.answer {
 					t.Fatalf("got %v, want %v", IsAnswer, tc.expected.answer)
 				}
 
-				if err := gc.Move(move); err != nil {
-					t.Fatal("unexpected error: ", err)
-				}
+				isOK(t, gc.Move(move))
 			}
 
 			if puzzler.Score() != tc.expected.score {
@@ -207,30 +199,30 @@ func TestChessDotComPuzzle(t *testing.T) {
 			}
 
 			newPuzzle, err = puzzler.NewGame()
-			if err != nil {
-				t.Fatal("unexpected error: ", err)
-			}
+			isOK(t, err)
 
 			gc = chess.NewGame(newPuzzle)
 			for _, m := range tc.moves {
 				expectedNextMove, err := chess.AlgebraicNotation{}.Decode(gc.Position(), m)
-				if err != nil {
-					t.Fatal("unexpected error: ", err)
-				}
+				isOK(t, err)
 
 				nextMove := puzzler.NextMove()
 				if expectedNextMove.String() != nextMove.String() {
 					t.Fatalf("got %v, want %v", nextMove, expectedNextMove)
 				}
 
-				if err := gc.Move(nextMove); err != nil {
-					t.Fatal("unexpected error: ", err)
-				}
+				isOK(t, gc.Move(nextMove))
 			}
 
 			if puzzler.Done() != tc.expected.done {
 				t.Fatalf("expected puzzle to be done, but it was not")
 			}
 		})
+	}
+}
+
+func isOK(t *testing.T, err error) {
+	if err != nil {
+		t.Fatal("unexpected error: ", err)
 	}
 }

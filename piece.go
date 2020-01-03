@@ -7,6 +7,7 @@ import (
 	"github.com/notnil/chess"
 )
 
+// Piece represent a single chess piece
 type Piece struct {
 	*tl.Text
 	piece chess.Piece
@@ -26,6 +27,7 @@ func (p Piece) String() string {
 	}
 }
 
+// Color returns the chess piece color. Either black or white
 func (p Piece) Color() tl.Attr {
 	if p.piece.Color() == chess.Black {
 		return palette.black
@@ -33,6 +35,7 @@ func (p Piece) Color() tl.Attr {
 	return palette.white
 }
 
+// NewPiece return a representation of a chess piece
 func NewPiece(x, y int, p chess.Piece) *Piece {
 	piece := &Piece{piece: p}
 	piece.Text = tl.NewText(x+2, y, piece.String(), piece.Color(), tl.ColorDefault)

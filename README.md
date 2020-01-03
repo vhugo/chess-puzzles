@@ -1,4 +1,4 @@
-# Chess Puzzles [![Build Status](https://travis-ci.org/vhugo/chess-puzzles.svg?branch=master)](https://travis-ci.org/vhugo/chess-puzzles)
+# Chess Puzzles [![Build Status](https://travis-ci.org/vhugo/chess-puzzles.svg?branch=master)](https://travis-ci.org/vhugo/chess-puzzles) [![Go Report Card](https://goreportcard.com/badge/github.com/vhugo/chess-puzzles)](https://goreportcard.com/report/github.com/vhugo/chess-puzzles)
 
 A terminal-based chess puzzles interface. The inspiration behind it comes from chess puzzles at
 [chess.com](https://www.chess.com/puzzles). This project was made possible because of two awesome 

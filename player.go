@@ -12,6 +12,7 @@ const (
 	cmdHint = "!hint"
 )
 
+// Player represents a player in the game
 type Player struct {
 	*tl.Text
 	previousMove string
@@ -21,6 +22,7 @@ type Player struct {
 
 var player *Player
 
+// Tick handle events triggered by the player
 func (p *Player) Tick(e tl.Event) {
 
 	if e.Type == tl.EventKey {
@@ -38,53 +40,7 @@ func (p *Player) Tick(e tl.Event) {
 			if len(p.move) == 0 {
 				return
 			}
-
-			switch p.move[0] {
-			case '!':
-				switch strings.ToLower(p.move) {
-				case cmdNew:
-					pz, err := loadPuzzle()
-					if err != nil {
-						panic(err)
-					}
-					gc = chess.NewGame(pz)
-					notation.Update()
-					board.Update()
-
-					p.previousMove = ""
-					p.move = ""
-					score.Update("", tl.ColorDefault)
-					status.Update(unsolved, tl.ColorDefault)
-
-				case cmdHint:
-					nextMove := puzzler.Hint()
-					if nextMove == nil {
-						return
-					}
-					puzzler.Answer(nil) // fails the puzzle
-					p.previousMove = nextMove.String()
-					score.Update(failed, tl.RgbTo256Color(100, 0, 0))
-				}
-
-			default:
-				p.previousMove = p.move
-				move(p.move)
-
-				if puzzler != nil {
-					switch {
-					case puzzler.Score() == puzzle.SUCCESS:
-						score.Update(succeed, tl.RgbTo256Color(0, 100, 0))
-
-					case puzzler.Score() == puzzle.FAILURE:
-						score.Update(failed, tl.RgbTo256Color(100, 0, 0))
-					}
-
-					if puzzler.Done() {
-						status.Update(solved, tl.RgbTo256Color(120, 100, 0))
-					}
-				}
-			}
-			p.move = ""
+			p.enterCommand()
 
 		default:
 			p.move = p.move + string(e.Ch)
@@ -94,12 +50,79 @@ func (p *Player) Tick(e tl.Event) {
 	}
 }
 
+// NewPlayer returns a new instance of player
 func NewPlayer(x, y int, color tl.Attr) *Player {
 	p := new(Player)
 	p.prefix = " to move: "
 	p.Text = tl.NewText(x, y,
 		gc.Position().Turn().Name()+p.prefix, color, tl.ColorDefault)
 	return p
+}
+
+func (p *Player) enterCommand() {
+	switch p.move[0] {
+	case '!':
+		switch strings.ToLower(p.move) {
+		case cmdNew:
+			p.cmdNewPuzzle()
+
+		case cmdHint:
+			nextMove := puzzler.Hint()
+			if nextMove == nil {
+				return
+			}
+			p.cmdHint(nextMove.String())
+		}
+
+	default:
+		p.previousMove = p.move
+		move(p.move)
+		p.updateScore()
+		p.updateStatus()
+	}
+	p.move = ""
+}
+
+func (p *Player) cmdNewPuzzle() {
+	pz, err := loadPuzzle()
+	if err != nil {
+		panic(err)
+	}
+	gc = chess.NewGame(pz)
+	notation.Update()
+	board.Update()
+
+	p.previousMove = ""
+	p.move = ""
+
+	score.Update("", tl.ColorDefault)
+	status.Update(unsolved, tl.ColorDefault)
+}
+
+func (p *Player) cmdHint(nextMove string) {
+	puzzler.Answer(nil) // fails the puzzle
+	p.previousMove = nextMove
+	score.Update(failed, tl.RgbTo256Color(100, 0, 0))
+}
+
+func (p *Player) updateScore() {
+	if puzzler != nil {
+		switch {
+		case puzzler.Score() == puzzle.SUCCESS:
+			score.Update(succeed, tl.RgbTo256Color(0, 100, 0))
+
+		case puzzler.Score() == puzzle.FAILURE:
+			score.Update(failed, tl.RgbTo256Color(100, 0, 0))
+		}
+	}
+}
+
+func (p *Player) updateStatus() {
+	if puzzler != nil {
+		if puzzler.Done() {
+			status.Update(solved, tl.RgbTo256Color(120, 100, 0))
+		}
+	}
 }
 
 func move(m string) error {

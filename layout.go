@@ -12,6 +12,7 @@ type block struct {
 	marginLeft int
 }
 
+// Layout represents size and spaces used to draw the user interface
 type Layout struct {
 	square   block
 	board    block
@@ -24,6 +25,7 @@ type Layout struct {
 	input    block
 }
 
+// Palette represents the colors used on the user interface
 type Palette struct {
 	dark, light, notations, current tl.Attr
 	black, white                    tl.Attr
@@ -63,7 +65,7 @@ var (
 	}
 
 	colorScheme = map[string]Palette{
-		"standard": Palette{
+		"standard": {
 			dark:      tl.RgbTo256Color(73, 163, 179),
 			light:     tl.ColorWhite,
 			black:     tl.RgbTo256Color(0, 0, 0),
@@ -74,7 +76,7 @@ var (
 			invalid:   tl.RgbTo256Color(200, 0, 0),
 			input:     tl.ColorWhite,
 		},
-		"brown": Palette{
+		"brown": {
 			dark:      tl.RgbTo256Color(175, 138, 105),
 			light:     tl.RgbTo256Color(218, 218, 185),
 			black:     tl.RgbTo256Color(0, 0, 0),
@@ -85,7 +87,7 @@ var (
 			invalid:   tl.RgbTo256Color(200, 0, 0),
 			input:     tl.ColorWhite,
 		},
-		"green": Palette{
+		"green": {
 			dark:      tl.RgbTo256Color(144, 173, 105),
 			light:     tl.RgbTo256Color(196, 196, 196),
 			black:     tl.RgbTo256Color(0, 0, 0),
@@ -96,7 +98,7 @@ var (
 			invalid:   tl.RgbTo256Color(200, 0, 0),
 			input:     tl.ColorWhite,
 		},
-		"dark": Palette{
+		"dark": {
 			dark:      tl.RgbTo256Color(50, 50, 50),
 			light:     tl.RgbTo256Color(150, 150, 150),
 			black:     tl.RgbTo256Color(0, 0, 0),

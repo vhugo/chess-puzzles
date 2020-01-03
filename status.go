@@ -2,6 +2,7 @@ package main
 
 import tl "github.com/JoelOtter/termloop"
 
+// Status represents whether or not the game is over
 type Status struct {
 	*tl.Text
 }
@@ -13,6 +14,7 @@ const (
 
 var status *Status
 
+// Update updates the user interface to indicate when the game is over
 func (s *Status) Update(text string, color tl.Attr) {
 	if s == nil {
 		return
@@ -29,6 +31,7 @@ func (s *Status) Update(text string, color tl.Attr) {
 	s.SetColor(palette.input, color)
 }
 
+// NewStatus returns a new instance of Status
 func NewStatus(x, y int) *Status {
 	s := new(Status)
 	s.Text = tl.NewText(x, y, "", palette.input, tl.ColorDefault)

@@ -5,98 +5,102 @@ import (
 	"github.com/notnil/chess"
 )
 
+// BoardSquare represents a single chess board's square
 type BoardSquare struct {
 	*tl.Text
 	square chess.Square
 }
 
+// Board represents the chess board in the interface
 type Board struct {
 	board [8][8]*BoardSquare
 }
 
 var (
-	A1 = &BoardSquare{square: chess.A1}
-	A2 = &BoardSquare{square: chess.A2}
-	A3 = &BoardSquare{square: chess.A3}
-	A4 = &BoardSquare{square: chess.A4}
-	A5 = &BoardSquare{square: chess.A5}
-	A6 = &BoardSquare{square: chess.A6}
-	A7 = &BoardSquare{square: chess.A7}
-	A8 = &BoardSquare{square: chess.A8}
-	B1 = &BoardSquare{square: chess.B1}
-	B2 = &BoardSquare{square: chess.B2}
-	B3 = &BoardSquare{square: chess.B3}
-	B4 = &BoardSquare{square: chess.B4}
-	B5 = &BoardSquare{square: chess.B5}
-	B6 = &BoardSquare{square: chess.B6}
-	B7 = &BoardSquare{square: chess.B7}
-	B8 = &BoardSquare{square: chess.B8}
-	C1 = &BoardSquare{square: chess.C1}
-	C2 = &BoardSquare{square: chess.C2}
-	C3 = &BoardSquare{square: chess.C3}
-	C4 = &BoardSquare{square: chess.C4}
-	C5 = &BoardSquare{square: chess.C5}
-	C6 = &BoardSquare{square: chess.C6}
-	C7 = &BoardSquare{square: chess.C7}
-	C8 = &BoardSquare{square: chess.C8}
-	D1 = &BoardSquare{square: chess.D1}
-	D2 = &BoardSquare{square: chess.D2}
-	D3 = &BoardSquare{square: chess.D3}
-	D4 = &BoardSquare{square: chess.D4}
-	D5 = &BoardSquare{square: chess.D5}
-	D6 = &BoardSquare{square: chess.D6}
-	D7 = &BoardSquare{square: chess.D7}
-	D8 = &BoardSquare{square: chess.D8}
-	E1 = &BoardSquare{square: chess.E1}
-	E2 = &BoardSquare{square: chess.E2}
-	E3 = &BoardSquare{square: chess.E3}
-	E4 = &BoardSquare{square: chess.E4}
-	E5 = &BoardSquare{square: chess.E5}
-	E6 = &BoardSquare{square: chess.E6}
-	E7 = &BoardSquare{square: chess.E7}
-	E8 = &BoardSquare{square: chess.E8}
-	F1 = &BoardSquare{square: chess.F1}
-	F2 = &BoardSquare{square: chess.F2}
-	F3 = &BoardSquare{square: chess.F3}
-	F4 = &BoardSquare{square: chess.F4}
-	F5 = &BoardSquare{square: chess.F5}
-	F6 = &BoardSquare{square: chess.F6}
-	F7 = &BoardSquare{square: chess.F7}
-	F8 = &BoardSquare{square: chess.F8}
-	G1 = &BoardSquare{square: chess.G1}
-	G2 = &BoardSquare{square: chess.G2}
-	G3 = &BoardSquare{square: chess.G3}
-	G4 = &BoardSquare{square: chess.G4}
-	G5 = &BoardSquare{square: chess.G5}
-	G6 = &BoardSquare{square: chess.G6}
-	G7 = &BoardSquare{square: chess.G7}
-	G8 = &BoardSquare{square: chess.G8}
-	H1 = &BoardSquare{square: chess.H1}
-	H2 = &BoardSquare{square: chess.H2}
-	H3 = &BoardSquare{square: chess.H3}
-	H4 = &BoardSquare{square: chess.H4}
-	H5 = &BoardSquare{square: chess.H5}
-	H6 = &BoardSquare{square: chess.H6}
-	H7 = &BoardSquare{square: chess.H7}
-	H8 = &BoardSquare{square: chess.H8}
+	a1 = &BoardSquare{square: chess.A1}
+	a2 = &BoardSquare{square: chess.A2}
+	a3 = &BoardSquare{square: chess.A3}
+	a4 = &BoardSquare{square: chess.A4}
+	a5 = &BoardSquare{square: chess.A5}
+	a6 = &BoardSquare{square: chess.A6}
+	a7 = &BoardSquare{square: chess.A7}
+	a8 = &BoardSquare{square: chess.A8}
+	b1 = &BoardSquare{square: chess.B1}
+	b2 = &BoardSquare{square: chess.B2}
+	b3 = &BoardSquare{square: chess.B3}
+	b4 = &BoardSquare{square: chess.B4}
+	b5 = &BoardSquare{square: chess.B5}
+	b6 = &BoardSquare{square: chess.B6}
+	b7 = &BoardSquare{square: chess.B7}
+	b8 = &BoardSquare{square: chess.B8}
+	c1 = &BoardSquare{square: chess.C1}
+	c2 = &BoardSquare{square: chess.C2}
+	c3 = &BoardSquare{square: chess.C3}
+	c4 = &BoardSquare{square: chess.C4}
+	c5 = &BoardSquare{square: chess.C5}
+	c6 = &BoardSquare{square: chess.C6}
+	c7 = &BoardSquare{square: chess.C7}
+	c8 = &BoardSquare{square: chess.C8}
+	d1 = &BoardSquare{square: chess.D1}
+	d2 = &BoardSquare{square: chess.D2}
+	d3 = &BoardSquare{square: chess.D3}
+	d4 = &BoardSquare{square: chess.D4}
+	d5 = &BoardSquare{square: chess.D5}
+	d6 = &BoardSquare{square: chess.D6}
+	d7 = &BoardSquare{square: chess.D7}
+	d8 = &BoardSquare{square: chess.D8}
+	e1 = &BoardSquare{square: chess.E1}
+	e2 = &BoardSquare{square: chess.E2}
+	e3 = &BoardSquare{square: chess.E3}
+	e4 = &BoardSquare{square: chess.E4}
+	e5 = &BoardSquare{square: chess.E5}
+	e6 = &BoardSquare{square: chess.E6}
+	e7 = &BoardSquare{square: chess.E7}
+	e8 = &BoardSquare{square: chess.E8}
+	f1 = &BoardSquare{square: chess.F1}
+	f2 = &BoardSquare{square: chess.F2}
+	f3 = &BoardSquare{square: chess.F3}
+	f4 = &BoardSquare{square: chess.F4}
+	f5 = &BoardSquare{square: chess.F5}
+	f6 = &BoardSquare{square: chess.F6}
+	f7 = &BoardSquare{square: chess.F7}
+	f8 = &BoardSquare{square: chess.F8}
+	g1 = &BoardSquare{square: chess.G1}
+	g2 = &BoardSquare{square: chess.G2}
+	g3 = &BoardSquare{square: chess.G3}
+	g4 = &BoardSquare{square: chess.G4}
+	g5 = &BoardSquare{square: chess.G5}
+	g6 = &BoardSquare{square: chess.G6}
+	g7 = &BoardSquare{square: chess.G7}
+	g8 = &BoardSquare{square: chess.G8}
+	h1 = &BoardSquare{square: chess.H1}
+	h2 = &BoardSquare{square: chess.H2}
+	h3 = &BoardSquare{square: chess.H3}
+	h4 = &BoardSquare{square: chess.H4}
+	h5 = &BoardSquare{square: chess.H5}
+	h6 = &BoardSquare{square: chess.H6}
+	h7 = &BoardSquare{square: chess.H7}
+	h8 = &BoardSquare{square: chess.H8}
 
 	board = Board{
 		board: [8][8]*BoardSquare{
-			[8]*BoardSquare{A8, B8, C8, D8, E8, F8, G8, H8},
-			[8]*BoardSquare{A7, B7, C7, D7, E7, F7, G7, H7},
-			[8]*BoardSquare{A6, B6, C6, D6, E6, F6, G6, H6},
-			[8]*BoardSquare{A5, B5, C5, D5, E5, F5, G5, H5},
-			[8]*BoardSquare{A4, B4, C4, D4, E4, F4, G4, H4},
-			[8]*BoardSquare{A3, B3, C3, D3, E3, F3, G3, H3},
-			[8]*BoardSquare{A2, B2, C2, D2, E2, F2, G2, H2},
-			[8]*BoardSquare{A1, B1, C1, D1, E1, F1, G1, H1},
+			{a8, b8, c8, d8, e8, f8, g8, h8},
+			{a7, b7, c7, d7, e7, f7, g7, h7},
+			{a6, b6, c6, d6, e6, f6, g6, h6},
+			{a5, b5, c5, d5, e5, f5, g5, h5},
+			{a4, b4, c4, d4, e4, f4, g4, h4},
+			{a3, b3, c3, d3, e3, f3, g3, h3},
+			{a2, b2, c2, d2, e2, f2, g2, h2},
+			{a1, b1, c1, d1, e1, f1, g1, h1},
 		}}
 )
 
+// Squares returns the 8x8 representation of the chess board
 func (b Board) Squares() [8][8]*BoardSquare {
 	return b.board
 }
 
+// Update updates the squares with the correct chess piece
 func (b Board) Update() {
 	for r := range b.board {
 		for _, sq := range b.board[r] {

@@ -4,19 +4,20 @@ import (
 	tl "github.com/JoelOtter/termloop"
 )
 
+// Square represents a chess board's square
 type Square struct {
 	*tl.Rectangle
 	loc   string
 	color tl.Attr
 }
 
+// Tick handles events and update squares accordingly
 func (s *Square) Tick(e tl.Event) {
 	move := player.move
-	if (len(move) >= 2 && move[:2] == s.loc) ||
-		(len(move) >= 4 && move[2:4] == s.loc) {
+	if possibleMove(move, s.loc) {
 
 		// once puzzle is done no more moves are allowed.
-		if puzzler != nil && puzzler.Done() {
+		if puzzleIsDone() {
 			s.SetColor(palette.invalid)
 			return
 		}
@@ -32,8 +33,7 @@ func (s *Square) Tick(e tl.Event) {
 	}
 
 	previousMove := player.previousMove
-	if len(previousMove) >= 4 &&
-		(previousMove[:2] == s.loc || previousMove[2:4] == s.loc) {
+	if matchPreviousMove(previousMove, s.loc) {
 		s.SetColor(palette.moved)
 		return
 	}
@@ -41,11 +41,26 @@ func (s *Square) Tick(e tl.Event) {
 	s.SetColor(s.color)
 }
 
+func possibleMove(move, loc string) bool {
+	return (len(move) >= 2 && move[:2] == loc) ||
+		(len(move) >= 4 && move[2:4] == loc)
+}
+
 func matchMove(valid, move, loc string) bool {
 	return (len(move) >= 4 && move[:4] == valid[:4] && move[2:4] == loc) ||
 		(len(move) >= 2 && move[:2] == valid[:2] && move[:2] == loc)
 }
 
+func matchPreviousMove(previousMove, loc string) bool {
+	return len(previousMove) >= 4 &&
+		(previousMove[:2] == loc || previousMove[2:4] == loc)
+}
+
+func puzzleIsDone() bool {
+	return puzzler != nil && puzzler.Done()
+}
+
+// NewSquare returns a termloop new rectangle used to draw chess board's squares
 func NewSquare(x, y, w, h int, color tl.Attr, loc string) *Square {
 	s := &Square{
 		loc:   loc,
